@@ -145,7 +145,8 @@ class Document extends \documongo\MongoObject {
 
     static function find($mn, $prefix, $type) {
 
-$elems = array();  
+        $elems = array();
+
         $entries = $mn->selectDB($prefix . "data")->documents->find(array("type" => $type));
         foreach ($entries as $entry) {
             $elems[] = new self($mn, $prefix, $entry);
@@ -382,6 +383,7 @@ $elems = array();
                     )
                 )
             );
+            // var_dump($query, $andQuery);
             $entry = $this->realData->documents->findOne($query, array('versions' => true));
             if (isset($entry["versions"]) && is_array($entry["versions"])) {
                 $versions = $entry["versions"];
@@ -416,3 +418,4 @@ $elems = array();
         return $fieldI18nValue;
     }
 }
+
