@@ -288,7 +288,6 @@ class Document extends \documongo\MongoObject {
                 );
                 $this->mongoObject["versions"][] = $versionObject;
 
-                // var_dump($this->mongoObject);die;
                 $ok = $this->save();
 
                 if ($ok) {
@@ -321,7 +320,7 @@ class Document extends \documongo\MongoObject {
                 }
             }
         }
-        var_dump(count($this->mongoObject["versions"]));
+
         $ok = $this->save();
 
         return $deletedVersion;
@@ -383,12 +382,11 @@ class Document extends \documongo\MongoObject {
                     )
                 )
             );
-            // var_dump($query, $andQuery);
+
             $entry = $this->realData->documents->findOne($query, array('versions' => true));
             if (isset($entry["versions"]) && is_array($entry["versions"])) {
                 $versions = $entry["versions"];
             }
-         //     var_dump($versions);
         }
 
         return $versions;

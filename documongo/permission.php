@@ -6,27 +6,22 @@ trait permission {
 
     protected $permissions;
 
-function my_dump($arr){echo '<pre>';var_dump($arr); echo '</pre>';   }
-
     protected function fetchPermissions($userUuid = null, $action = null) {
 
         if (!isset($this->permissions[$action])) {
             $rule_search = array(
                 "objects" => array('$regex' => $this->uuid . "(/.*)?", '$options' => 'i')
             );
-// where is xpath and lang?
+            // where is xpath and lang?
             if (!is_null($userUuid)) {
                 $rule_search["actors"] = array('$in' => array($userUuid, '*'));
             }
             if (!is_null($action)) {
                 $rule_search["actions"] = array('$in' => array($action, "+$action", "-$action"));
             }
- //  my_dump($rule_search);
             $rules = $this->security->rules->find($rule_search);
-// my_dump($rules);
             if ($rules->hasNext()) {
                 foreach ($rules as $rule) {
-//           my_dump($rule);
                     $ruleObjects = $rule["objects"];
                     $ruleActions = $rule["actions"];
 
@@ -49,8 +44,6 @@ function my_dump($arr){echo '<pre>';var_dump($arr); echo '</pre>';   }
                     }
                 }
             }
-//           echo "perms";
- //         my_dump($this->permissions);
         }
     }
 
@@ -67,22 +60,14 @@ function my_dump($arr){echo '<pre>';var_dump($arr); echo '</pre>';   }
 
         $objectPathComponents = explode("/", trim($xpath, "/"));
 
-        // echo "\n\n-----> hasPermission({$this->uuid}, $action, $xpath)\n\n";
-
-    //     my_dump($this->permissions);
-
         foreach (array("allow" => true, "deny" => false) as $permMode => $permValue) {
-     //        echo "===> $permMode => $permValue \n";
             if ($isPermitted === false) break;
 
             $curPath = $this->uuid;
 
-            //echo "(?) check perm permissions[$action][$permMode][$curPath]: $permValue\n";
-
             $foundRule = isset($this->permissions[$action][$permMode][$curPath])
                    || (!is_null($lang) && isset($this->permissions[$action][$permMode][$curPath . "_" . $lang]));
             if ($foundRule) {
-                // echo "(!) got perm permissions[$action][$permMode][$curPath]: $permValue\n";
                 $isPermitted = $permValue;
             }
 
@@ -91,21 +76,14 @@ function my_dump($arr){echo '<pre>';var_dump($arr); echo '</pre>';   }
 
                 $curPath .= "/" . $pathComp;
 
-                // echo "(?) check perm permissions[$action][$permMode][$curPath]: $permValue\n";
                 $foundRule = isset($this->permissions[$action][$permMode][$curPath])
                         || (!is_null($lang) && isset($this->permissions[$action][$permMode][$curPath . "_" . $lang]));
 
                 if ($foundRule) {
-                    // echo "(!) got perm permissions[$action][$permMode][$curPath]: $permValue\n";
                     $isPermitted = $permValue;
                 }
             }
         }
-
-         //echo "result({$this->uuid}): ";
-  //      my_dump($userUuid, $action, $xpath, $isPermitted);
-
-
 
         return $isPermitted;
     }
