@@ -124,6 +124,17 @@ class Document extends \documongo\MongoObject {
         return $changed;
     }
 
+    function setVerField($period, $fieldName, $fieldValue) {
+        $changed = true;
+        if (isset($this->mongoObject["versions"][$period]["content"][$fieldName])) {
+            if ($this->mongoObject["versions"][$period]["content"][$fieldName]  == $fieldValue) {
+                $changed = false;
+            }
+        }
+        $this->mongoObject["versions"][$period]["content"][$fieldName]  = $fieldValue;
+        return $changed;
+    }
+
     function save() {
         $status = $this->realData->documents->update(array("_id" => $this->mongoId), $this->mongoObject, array("upsert" => true));
 
@@ -248,8 +259,25 @@ class Document extends \documongo\MongoObject {
         return $oldValues;
     }
 
+    function stripWrongKeys() {
+        $ret = false;
+        foreach ($this->mongoObject as $key => $value) {
+            if (strpos($key, ".") !== false) {
+                $ret = true;
+                unset($this->mongoObject[$key]);
+            }
+        }
+
+        return $ret;
+    }
+
     function saveVersion($versionLabel, $versionDescription, $language) {
         $versionId = null;
+
+        if ($this->stripWrongKeys()) {
+            return;
+        }
+        // var_dump($this->mongoObject);die;
 
         if (!is_null($this->mongoObject) && is_array($this->mongoObject)) {
             if ($this->typeObject && $this->typeObject->items && is_array($this->typeObject->items)) {
