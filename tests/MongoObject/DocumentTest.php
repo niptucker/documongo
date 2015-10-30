@@ -1,16 +1,14 @@
 <?php
 
-require_once('PHPUnit/Autoload.php');
-require_once('../../documongo/Load.php');
-
 use \documongo\MongoObject\DocumentType;
 use \documongo\MongoObject\Document;
+use \MongoClient;
 
 class DocumentTest extends PHPUnit_Framework_TestCase
 {
 
     /**
-     * @dataProvider providerCreate
+     * @dataProvider providerForCreate
      */
     public function testCreateDelete($mn, $prefix, $typeObject, $uuid)
     {
@@ -37,12 +35,12 @@ class DocumentTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($deleted, true);
     }
 
-    public function providerCreate()
+    public function providerForCreate()
     {
-        $mn = new \MongoClient();
+        $mn = new MongoClient();
         $prefix = "temp_test_";
 
-        $typeObject = DocumentType::findByType($mn, $prefix, "faculty");
+        $typeObject = DocumentType::findByType($mn, $prefix, "test_type");
 
         $uuid = "test-uuid";
 

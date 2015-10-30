@@ -1,0 +1,23 @@
+{
+    "name": "niptucker/documongo",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Tikhon Tagunov",
+            "email": "tikhon.tagunov@gmail.com",
+            "role": "Developer"
+        }
+    ],
+
+    "require": {
+        "php": ">=5.3.2",
+        "ext-curl": "*"
+    },
+
+    "autoload" : {
+        "psr-4": {
+            "documongo\\": "documongo/"
+        }
+    }
+
+}
