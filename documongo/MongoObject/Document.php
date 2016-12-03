@@ -180,6 +180,20 @@ class Document extends \documongo\MongoObject {
         }
     }
 
+    static function findBy($mn, $prefix, $by) {
+        $entry = null;
+        if (!is_null($by)) {
+            try {
+                $entry = $mn->selectDB($prefix . "data")->documents->findOne($by);
+
+                if (!is_null($entry)) {
+                    return new self($mn, $prefix, $entry);
+                }
+            } catch (MongoException $e) {
+            }
+        }
+    }
+
     static function findByUuid($mn, $prefix, $uuid) {
         $entry = null;
         if (!is_null($uuid)) {
